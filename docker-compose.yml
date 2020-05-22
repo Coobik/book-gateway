@@ -1,0 +1,64 @@
+version: '3'
+services:
+  authors:
+    image: bff-authors-service:1.0
+    container_name: bff-authors-service
+    expose:
+      - 8080
+    networks:
+      - mynet
+  books:
+    image: bff-books-service:1.0
+    container_name: bff-books-service
+    expose:
+      - 8080
+    networks:
+      - mynet
+  web-sockets:
+    image: bff-web-sockets-service:1.0
+    container_name: bff-web-sockets-service
+    expose:
+      - 8080
+    networks:
+      - mynet
+  redis:
+    image: redis:alpine
+    container_name: my-redis
+    command: redis-server --requirepass passw0rd
+    ports:
+      - 6379:6379
+    networks:
+      - mynet
+  gateway:
+    image: bff-gateway:1.0
+    container_name: bff-gateway
+    ports:
+      - 8080:8080
+    networks:
+      - mynet
+  mobile-gateway:
+    image: bff-gateway:1.0
+    container_name: bff-mobile-gateway
+    environment:
+      - BOOKDETAILS_URL=http://bff-brief-aggregator:2105
+    ports:
+      - 8081:8080
+    networks:
+      - mynet
+  frontend:
+    image: bff-frontend:1.0
+    container_name: bff-frontend
+    expose:
+      - 1805
+    networks:
+      - mynet
+  brief-aggregator:
+    image: bff-brief-aggregator:1.0
+    container_name: bff-brief-aggregator
+    expose:
+      - 2105
+    networks:
+      - mynet
+
+networks:
+  mynet:

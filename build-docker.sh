@@ -1,0 +1,23 @@
+#!/bin/sh
+
+echo building docker images...
+
+echo building books docker image...
+docker build -t bff-books-service:1.0 -f books/Dockerfile books
+
+echo building authors docker image...
+docker build -t bff-authors-service:1.0 -f authors/Dockerfile authors
+
+echo building web-sockets docker image...
+docker build -t bff-web-sockets-service:1.0 -f web-sockets/Dockerfile web-sockets
+
+echo building gateway docker image...
+docker build -t bff-gateway:1.0 -f gateway/Dockerfile gateway
+
+echo building frontend docker image...
+docker build -t bff-frontend:1.0 -f frontend/Dockerfile frontend
+
+echo building brief-aggregator docker image...
+docker build -t bff-brief-aggregator:1.0 -f brief-aggregator/Dockerfile brief-aggregator
+
+echo docker images build complete
