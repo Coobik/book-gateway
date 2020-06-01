@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-books
+  name: bff-books
+  namespace: book-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-books
+  template:
+    metadata:
+      labels:
+        app: bff-books
+    spec:
+      containers:
+        - name: bff-books
+          image: bff-books-service:1.0
+          imagePullPolicy: Never
+          env:
+            - name: AUTHORS_URL
+              value: "http://bff-authors-service.book-ns.svc.cluster.local:8080"
+
+            - name: SPRING_REDIS_HOST
+              value: "redis-service.data-ns.svc.cluster.local"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_PASSWORD
+              value: "passw0rd"
+            - name: SPRING_REDIS_TIMEOUT
+              value: "60000"
+            - name: SPRING_REDIS_DATABASE
+              value: "0"
+            - name: REDIS_CHANNEL
+              value: "books"
+
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-books-service
+  namespace: book-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-books
+  ports:
+    - port: 8080
+      targetPort: 8080

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-web-sockets
+  name: bff-web-sockets
+  namespace: book-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-web-sockets
+  template:
+    metadata:
+      labels:
+        app: bff-web-sockets
+    spec:
+      containers:
+        - name: bff-web-sockets
+          image: bff-web-sockets-service:1.0
+          imagePullPolicy: Never
+          env:
+            - name: SPRING_REDIS_HOST
+              value: "redis-service.data-ns.svc.cluster.local"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_PASSWORD
+              value: "passw0rd"
+            - name: SPRING_REDIS_TIMEOUT
+              value: "60000"
+            - name: SPRING_REDIS_DATABASE
+              value: "0"
+
+            - name: REDIS_AUTHORS_CHANNEL
+              value: "authors"
+            - name: REDIS_BOOKS_CHANNEL
+              value: "books"
+
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-web-sockets-service
+  namespace: book-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-web-sockets
+  ports:
+    - port: 8080
+      targetPort: 8080
