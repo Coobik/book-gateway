@@ -22,7 +22,11 @@ spec:
 
           env:
             - name: AUTHORS_URL
-              value: "http://bff-authors-service.book-ns.svc.cluster.local:8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
             - name: REDIS_CHANNEL
               value: "books"
 

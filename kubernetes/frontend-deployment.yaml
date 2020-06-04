@@ -19,11 +19,19 @@ spec:
         - name: bff-frontend
           image: bff-frontend:1.0
           imagePullPolicy: Never
+
           env:
             - name: AUTHORS_URL
-              value: "http://bff-authors-service.book-ns.svc.cluster.local:8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
             - name: BOOKS_URL
-              value: "http://bff-books-service.book-ns.svc.cluster.local:8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: BOOKS_URL
 
           ports:
             - containerPort: 1805

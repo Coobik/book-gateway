@@ -24,20 +24,6 @@ spec:
             - name: AUTH_TOKENS
               value: "58cef136-acdb-49fb-b48e-a5f020c3cabb,1a2517fe-5a0d-43a5-adb4-227e39d02f78"
 
-            - name: AUTHORS_URL
-              value: "http://bff-authors-service.book-ns.svc.cluster.local:8080"
-            - name: BOOKS_URL
-              value: "http://bff-books-service.book-ns.svc.cluster.local:8080"
-            - name: BOOKDETAILS_URL
-              value: "http://bff-frontend-service.book-ns.svc.cluster.local:1805"
-
-            - name: WEBSOCKET_URL
-              value: "ws://bff-web-sockets-service.book-ns.svc.cluster.local:8080"
-            - name: WEBSOCKET_SOCKJS_URL
-              value: "http://bff-web-sockets-service.book-ns.svc.cluster.local:8080"
-            - name: WEBSOCKET_PATH
-              value: "/push"
-
             - name: REDIS_LIMIT_REPLENISHRATE
               value: "1"
             - name: REDIS_LIMIT_BURSTCAPACITY
@@ -46,6 +32,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: redis-configmap
+            - configMapRef:
+                name: services-configmap
 
           ports:
             - containerPort: 8080
