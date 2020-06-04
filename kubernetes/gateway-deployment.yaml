@@ -22,7 +22,10 @@ spec:
 
           env:
             - name: AUTH_TOKENS
-              value: "58cef136-acdb-49fb-b48e-a5f020c3cabb,1a2517fe-5a0d-43a5-adb4-227e39d02f78"
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: AUTH_TOKENS
 
             - name: REDIS_LIMIT_REPLENISHRATE
               value: "1"
