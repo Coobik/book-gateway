@@ -29,6 +29,12 @@ spec:
             - name: REDIS_LIMIT_BURSTCAPACITY
               value: "2"
 
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
           envFrom:
             - configMapRef:
                 name: redis-configmap

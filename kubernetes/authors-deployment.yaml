@@ -27,6 +27,12 @@ spec:
                   name: channels-configmap
                   key: REDIS_AUTHORS_CHANNEL
 
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
           envFrom:
             - configMapRef:
                 name: redis-configmap
