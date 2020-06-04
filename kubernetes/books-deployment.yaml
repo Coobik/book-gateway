@@ -28,7 +28,10 @@ spec:
                   key: AUTHORS_URL
 
             - name: REDIS_CHANNEL
-              value: "books"
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_BOOKS_CHANNEL
 
           envFrom:
             - configMapRef:

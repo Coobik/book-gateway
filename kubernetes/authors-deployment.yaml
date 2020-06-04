@@ -22,7 +22,10 @@ spec:
 
           env:
             - name: REDIS_CHANNEL
-              value: "authors"
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_AUTHORS_CHANNEL
 
           envFrom:
             - configMapRef:
