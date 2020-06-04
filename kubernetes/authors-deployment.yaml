@@ -19,19 +19,15 @@ spec:
         - name: bff-authors
           image: bff-authors-service:1.0
           imagePullPolicy: Never
+
           env:
-            - name: SPRING_REDIS_HOST
-              value: "redis-service.data-ns.svc.cluster.local"
-            - name: SPRING_REDIS_PORT
-              value: "6379"
-            - name: SPRING_REDIS_PASSWORD
-              value: "passw0rd"
-            - name: SPRING_REDIS_TIMEOUT
-              value: "60000"
-            - name: SPRING_REDIS_DATABASE
-              value: "0"
             - name: REDIS_CHANNEL
               value: "authors"
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+
           ports:
             - containerPort: 8080
 ---

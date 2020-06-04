@@ -19,6 +19,7 @@ spec:
         - name: bff-gateway
           image: bff-gateway:1.0
           imagePullPolicy: Never
+
           env:
             - name: AUTH_TOKENS
               value: "58cef136-acdb-49fb-b48e-a5f020c3cabb,1a2517fe-5a0d-43a5-adb4-227e39d02f78"
@@ -37,21 +38,14 @@ spec:
             - name: WEBSOCKET_PATH
               value: "/push"
 
-            - name: SPRING_REDIS_HOST
-              value: "redis-service.data-ns.svc.cluster.local"
-            - name: SPRING_REDIS_PORT
-              value: "6379"
-            - name: SPRING_REDIS_PASSWORD
-              value: "passw0rd"
-            - name: SPRING_REDIS_TIMEOUT
-              value: "60000"
-            - name: SPRING_REDIS_DATABASE
-              value: "0"
-
             - name: REDIS_LIMIT_REPLENISHRATE
               value: "1"
             - name: REDIS_LIMIT_BURSTCAPACITY
               value: "2"
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
 
           ports:
             - containerPort: 8080
