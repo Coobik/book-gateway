@@ -260,12 +260,23 @@
 
 ## ingress
 
+- `/etc/hosts`:
+    ```
+    192.168.99.100  book.local
+    192.168.99.100  brief.book.local
+    ```
+
 - `minikube addons enable ingress`
 
 - `kubectl apply -f gateway-ingress.yaml`
 
 - `kubectl get ingress -n book-ns`
     ```
-    NAME              CLASS    HOSTS   ADDRESS          PORTS   AGE
-    gateway-ingress   <none>   *       192.168.99.100   80      20m
+    NAME              CLASS    HOSTS                         ADDRESS          PORTS   AGE
+    gateway-ingress   <none>   book.local,brief.book.local   192.168.99.100   80      84m
     ```
+
+- GET
+    - http://192.168.99.100/api/v1/details
+    - http://book.local/api/v1/details
+    - http://brief.book.local/api/v1/details

@@ -9,3 +9,30 @@ spec:
   backend:
     serviceName: bff-gateway-service
     servicePort: 8080
+
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: bff-gateway-service
+              servicePort: 8080
+
+    - host: book.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: bff-gateway-service
+              servicePort: 8080
+
+    - host: brief.book.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: brief-gateway-service
+              servicePort: 8080
