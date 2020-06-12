@@ -213,3 +213,43 @@
     app.jar  bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
     # exit
     ```
+
+
+## deploy
+
+`kubectl apply -f some.yaml -n some-ns`
+
+### redis
+
+- namespace: `data-ns.yaml`
+- secret: `kubectl apply -f redis-secret.yaml -n data-ns`
+
+- stateless:
+    - deployment + service: `redis-deployment.yaml`
+
+- stateful:
+    - persistence:
+        - persistent volume with host path under `/data` + persistent volume claim: `redis-persistentvolume.yaml`
+        - persistent volume claim with standard storage class: `redis-persistentvolumeclaim-storageclass-standard.yaml`
+    - stateful set + headless service (`clusterIP`: `None`): `redis-statefulset.yaml`
+
+### services
+
+- namespace: `book-ns.yaml`
+
+- secrets:
+    - `kubectl apply -f redis-secret.yaml -n book-ns`
+    - `auth-secret.yaml`
+
+- config maps:
+    - `channels-configmap.yaml`
+    - `redis-configmap.yaml`
+    - `services-configmap.yaml`
+
+- deployments + services:
+    - `authors-deployment.yaml`
+    - `books-deployment.yaml`
+    - `brief-aggregator-deployment.yaml`
+    - `frontend-deployment.yaml`
+    - `web-sockets-deployment.yaml`
+    - `gateway-deployment.yaml`
