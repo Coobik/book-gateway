@@ -253,3 +253,16 @@
     - `frontend-deployment.yaml`
     - `web-sockets-deployment.yaml`
     - `gateway-deployment.yaml`
+
+
+## ingress
+
+- `minikube addons enable ingress`
+
+- `kubectl apply -f gateway-ingress.yaml`
+
+- `kubectl get ingress -n book-ns`
+    ```
+    NAME              CLASS    HOSTS   ADDRESS          PORTS   AGE
+    gateway-ingress   <none>   *       192.168.99.100   80      20m
+    ```
