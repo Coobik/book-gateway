@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: brief-services-configmap
+  namespace: book-ns
+data:
+  AUTHORS_URL: "http://bff-authors-service.book-ns.svc.cluster.local:8080"
+  BOOKS_URL: "http://bff-books-service.book-ns.svc.cluster.local:8080"
+  BOOKDETAILS_URL: "http://bff-brief-aggregator-service.book-ns.svc.cluster.local:2105"
+
+  WEBSOCKET_URL: "ws://bff-web-sockets-service.book-ns.svc.cluster.local:8080"
+  WEBSOCKET_SOCKJS_URL: "http://bff-web-sockets-service.book-ns.svc.cluster.local:8080"
+  WEBSOCKET_PATH: "/push"

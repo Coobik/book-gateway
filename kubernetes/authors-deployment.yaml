@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-authors
+  name: bff-authors
+  namespace: book-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-authors
+  template:
+    metadata:
+      labels:
+        app: bff-authors
+    spec:
+      containers:
+        - name: bff-authors
+          image: bff-authors-service:1.0
+          imagePullPolicy: Never
+
+          env:
+            - name: REDIS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_AUTHORS_CHANNEL
+
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-authors-service
+  namespace: book-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-authors
+  ports:
+    - port: 8080
+      targetPort: 8080

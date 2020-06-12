@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-brief-aggregator
+  name: bff-brief-aggregator
+  namespace: book-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-brief-aggregator
+  template:
+    metadata:
+      labels:
+        app: bff-brief-aggregator
+    spec:
+      containers:
+        - name: bff-brief-aggregator
+          image: bff-brief-aggregator:1.0
+          imagePullPolicy: Never
+
+          env:
+            - name: AUTHORS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
+            - name: BOOKS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: BOOKS_URL
+
+          ports:
+            - containerPort: 2105
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-brief-aggregator-service
+  namespace: book-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-brief-aggregator
+  ports:
+    - name: http
+      port: 2105
+      targetPort: 2105

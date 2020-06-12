@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-web-sockets
+  name: bff-web-sockets
+  namespace: book-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-web-sockets
+  template:
+    metadata:
+      labels:
+        app: bff-web-sockets
+    spec:
+      containers:
+        - name: bff-web-sockets
+          image: bff-web-sockets-service:1.0
+          imagePullPolicy: Never
+
+          env:
+            - name: REDIS_AUTHORS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_AUTHORS_CHANNEL
+
+            - name: REDIS_BOOKS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_BOOKS_CHANNEL
+
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-web-sockets-service
+  namespace: book-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-web-sockets
+  ports:
+    - port: 8080
+      targetPort: 8080
