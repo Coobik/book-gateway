@@ -161,10 +161,11 @@
     NAME                           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
     bff-authors-service            ClusterIP   10.102.86.59     <none>        8080/TCP         10d
     bff-books-service              ClusterIP   10.105.235.253   <none>        8080/TCP         10d
-    bff-brief-aggregator-service   NodePort    10.97.145.246    <none>        2105:31128/TCP   10d
+    bff-brief-aggregator-service   ClusterIP   10.97.145.246    <none>        2105/TCP         10d
     bff-frontend-service           ClusterIP   10.109.0.126     <none>        1805/TCP         10d
     bff-gateway-service            NodePort    10.102.23.170    <none>        8080:30497/TCP   10d
     bff-web-sockets-service        ClusterIP   10.97.155.155    <none>        8080/TCP         10d
+    brief-gateway-service          NodePort    10.103.57.247    <none>        8080:31876/TCP   10d
     ```
 
 - `kubectl get services -n data-ns`
@@ -245,6 +246,7 @@
     - `channels-configmap.yaml`
     - `redis-configmap.yaml`
     - `services-configmap.yaml`
+    - `brief-services-configmap.yaml`
 
 - deployments + services:
     - `authors-deployment.yaml`
@@ -253,6 +255,7 @@
     - `frontend-deployment.yaml`
     - `web-sockets-deployment.yaml`
     - `gateway-deployment.yaml`
+    - `brief-gateway-deployment.yaml`
 
 
 ## ingress

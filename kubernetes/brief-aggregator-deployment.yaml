@@ -42,7 +42,7 @@ metadata:
   name: bff-brief-aggregator-service
   namespace: book-ns
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: bff-brief-aggregator
   ports:
