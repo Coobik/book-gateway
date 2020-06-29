@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: channels-configmap
+  namespace: {{ .Values.bookNameSpace }}
+data:
+  REDIS_AUTHORS_CHANNEL: {{ .Values.redis.channel.authors }}
+  REDIS_BOOKS_CHANNEL: {{ .Values.redis.channel.books }}

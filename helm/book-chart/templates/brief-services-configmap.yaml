@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: brief-services-configmap
+  namespace: {{ .Values.bookNameSpace }}
+data:
+  AUTHORS_URL: "http://bff-authors-service.{{ .Values.bookNameSpace }}.svc.cluster.local:{{ .Values.authors.port }}"
+  BOOKS_URL: "http://bff-books-service.{{ .Values.bookNameSpace }}.svc.cluster.local:{{ .Values.books.port }}"
+  BOOKDETAILS_URL: "http://bff-brief-aggregator-service.{{ .Values.bookNameSpace }}.svc.cluster.local:{{ .Values.briefAggregator.port }}"
+
+  WEBSOCKET_URL: "ws://bff-web-sockets-service.{{ .Values.bookNameSpace }}.svc.cluster.local:{{ .Values.webSockets.port }}"
+  WEBSOCKET_SOCKJS_URL: "http://bff-web-sockets-service.{{ .Values.bookNameSpace }}.svc.cluster.local:{{ .Values.webSockets.port }}"
+  WEBSOCKET_PATH: "/push"

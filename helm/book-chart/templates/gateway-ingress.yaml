@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  namespace: {{ .Values.bookNameSpace }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  backend:
+    serviceName: bff-gateway-service
+    servicePort: {{ .Values.gateway.port }}
+
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: bff-gateway-service
+              servicePort: {{ .Values.gateway.port }}
+
+    - host: book.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: bff-gateway-service
+              servicePort: {{ .Values.gateway.port }}
+
+    - host: brief.book.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: brief-gateway-service
+              servicePort: {{ .Values.briefGateway.port }}
