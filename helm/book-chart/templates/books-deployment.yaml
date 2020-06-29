@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-books
+  name: bff-books
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  replicas: {{ .Values.books.replicaCount }}
+  selector:
+    matchLabels:
+      app: bff-books
+  template:
+    metadata:
+      labels:
+        app: bff-books
+    spec:
+      containers:
+        - name: bff-books
+          image: {{ .Values.books.image }}
+          imagePullPolicy: Never
+
+          env:
+            - name: SERVER_PORT
+              value: "{{ .Values.books.port }}"
+
+            - name: AUTHORS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
+            - name: REDIS_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: channels-configmap
+                  key: REDIS_BOOKS_CHANNEL
+
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+
+          ports:
+            - containerPort: {{ .Values.books.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-books-service
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-books
+  ports:
+    - port: {{ .Values.books.port }}
+      targetPort: {{ .Values.books.port }}

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-gateway
+  name: bff-gateway
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  replicas: {{ .Values.gateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: bff-gateway
+  template:
+    metadata:
+      labels:
+        app: bff-gateway
+    spec:
+      containers:
+        - name: bff-gateway
+          image: {{ .Values.gateway.image }}
+          imagePullPolicy: Never
+
+          env:
+            - name: SERVER_PORT
+              value: "{{ .Values.gateway.port }}"
+
+            - name: AUTH_TOKENS
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: AUTH_TOKENS
+
+            - name: REDIS_LIMIT_REPLENISHRATE
+              value: "1"
+            - name: REDIS_LIMIT_BURSTCAPACITY
+              value: "2"
+
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD
+
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+            - configMapRef:
+                name: services-configmap
+
+          ports:
+            - containerPort: {{ .Values.gateway.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-gateway-service
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  type: NodePort
+  selector:
+    app: bff-gateway
+  ports:
+    - name: http
+      port: {{ .Values.gateway.port }}
+      targetPort: {{ .Values.gateway.port }}

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-frontend
+  name: bff-frontend
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: bff-frontend
+  template:
+    metadata:
+      labels:
+        app: bff-frontend
+    spec:
+      containers:
+        - name: bff-frontend
+          image: {{ .Values.frontend.image }}
+          imagePullPolicy: Never
+
+          env:
+            - name: SERVER_PORT
+              value: "{{ .Values.frontend.port }}"
+
+            - name: AUTHORS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
+            - name: BOOKS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: BOOKS_URL
+
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-frontend-service
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-frontend
+  ports:
+    - name: http
+      port: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}

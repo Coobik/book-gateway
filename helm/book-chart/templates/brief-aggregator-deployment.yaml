@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff-brief-aggregator
+  name: bff-brief-aggregator
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  replicas: {{ .Values.briefAggregator.replicaCount }}
+  selector:
+    matchLabels:
+      app: bff-brief-aggregator
+  template:
+    metadata:
+      labels:
+        app: bff-brief-aggregator
+    spec:
+      containers:
+        - name: bff-brief-aggregator
+          image: {{ .Values.briefAggregator.image }}
+          imagePullPolicy: Never
+
+          env:
+            - name: SERVER_PORT
+              value: "{{ .Values.briefAggregator.port }}"
+
+            - name: AUTHORS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: AUTHORS_URL
+
+            - name: BOOKS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: services-configmap
+                  key: BOOKS_URL
+
+          ports:
+            - containerPort: {{ .Values.briefAggregator.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff-brief-aggregator-service
+  namespace: {{ .Values.bookNameSpace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: bff-brief-aggregator
+  ports:
+    - name: http
+      port: {{ .Values.briefAggregator.port }}
+      targetPort: {{ .Values.briefAggregator.port }}

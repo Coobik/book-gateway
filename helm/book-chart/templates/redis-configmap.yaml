@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-configmap
+  namespace: {{ .Values.bookNameSpace }}
+data:
+  SPRING_REDIS_HOST: "{{ .Values.redis.host }}"
+  SPRING_REDIS_PORT: "{{ .Values.redis.port }}"
+  SPRING_REDIS_TIMEOUT: "{{ .Values.redis.timeout }}"
+  SPRING_REDIS_DATABASE: "{{ .Values.redis.database }}"
